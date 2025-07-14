@@ -102,10 +102,26 @@ end
 local itemsRefresh = function()
  slots = vault.list()
  
- items = {}
+ for i, v in pairs(items) do
+  v.count = 0
+ end
  
  for i, t in pairs(slots) do
   addToItems(t.name, t.count)
+ end
+ 
+ local deleted = true
+ while deleted do
+  deleted = false
+  
+  for i, v in pairs(items) do
+   if v.count == 0 then
+    table.remove(items, i)
+    deleted = true
+    break
+   end
+  end
+  
  end
 end
 
@@ -151,7 +167,7 @@ addObj("chest", {
  end
 })
 
-for i = 1, 5 do
+for i = 1, 6 do
  addObj("item"..i, {
   area = {
    x0 = 2, 
@@ -161,13 +177,13 @@ for i = 1, 5 do
    color = colors.orange
   },
   draw = function(self)
-   local theSlot = items[i + itemPage*5]
+   local theSlot = items[i + itemPage * 6]
    if theSlot then
     writeColor(cleanID(theSlot.name) .. " - " .. theSlot.count, self.area.x0, self.area.y0, colors.orange, colors.black)
    end
   end,
   click = function(self)
-   theSlot = items[i + itemPage * 5]
+   theSlot = items[i + itemPage * 6]
    if theSlot then
     for i, v in pairs(slots) do
      if v.name == theSlot.name then
